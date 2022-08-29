@@ -225,13 +225,6 @@ class WindowGenerator():
         ##############################################################
         # Scaler
         ##############################################################
-        # self.data_mean = self.data.drop(["Date"],axis=1).mean()
-        # self.data_std = self.data.drop(["Date"],axis=1).std()
-
-        # self.train_df = (self.train_df - self.data_mean) / self.data_std # Normalize
-        # self.val_df = (self.val_df - self.data_mean) / self.data_std
-        # self.test_df = (self.test_df - self.data_mean) / self.data_std
-
         self.data_min = self.data.drop(["Date"],axis=1).min()
         self.data_max = self.data.drop(["Date"],axis=1).max()
 
@@ -324,20 +317,6 @@ class WindowGenerator():
             print(inputs.shape, labels.shape)
             return inputs, labels
 
-    # def make_dataset(self, data, batch_size):
-    #     data = np.array(data, dtype=np.float64)
-    #     data = tf.convert_to_tensor(data, dtype=tf.float64)
-    #     ds = tf.keras.preprocessing.timeseries_dataset_from_array(
-    #         data=data,
-    #         targets=None,
-    #         sequence_length=self.total_window_size,
-    #         sequence_stride=1,
-    #         shuffle=False,
-    #         batch_size=batch_size
-    #         )
-    #     ds = ds.map(self.split_window)
-    #     return ds
-
     def inverse_transform(self, y):
         return ( y * (self.data_max[self.label_columns].values[0] - self.data_min[self.label_columns].values[0])) + \
                 self.data_min[self.label_columns].values[0]
@@ -369,39 +348,3 @@ class WindowGenerator():
     @property
     def labels(self):
         return self.data[self.label_columns]
-#%%
-# def creat_dataset(data, n_in = 21, n_out = 7):pg
-#     # [samples, timesteps, features]
-#     X = np.empty(shape=(0,n_in,data.shape[-1]))
-#     Y = np.empty(shape=(0,n_out,2))
-#     for i in range(len(data) - (n_in + n_out)):
-#         x = data[i:(i+n_in)].values
-#         y = data.loc[(i+n_in):(i+n_in+n_out-1),["Date","Maximum_Power_This_Year"]].values
-#         X = np.vstack([X,np.array(x)[np.newaxis,...]])
-#         Y = np.vstack([Y,np.array(y)[np.newaxis,...]])
-#     # X = np.array(X)
-#     # Y = np.array(Y)
-#     return X, Y
-
-# def create_dataset_holiday(data, n_in = 21, n_out = 7):
-#     X = np.empty(shape=(0,n_out,2))
-#     for i in range(len(data) - (n_in + n_out)):
-#         x = data.loc[(i+n_in):(i+n_in+n_out-1),["weekday","holiday"]].values
-#         X = np.vstack([X, np.array(x)[np.newaxis,...]])
-#     return X
-
-# def split_data(X, Y = None, test_size = 14):
-#     if Y is None :
-#         X_train, X_test = X[:(len(X)-test_size)], X[(len(X)-test_size):]
-#         print("X_train shape : {}\n X_test shape : {}".format(X_train.shape, X_test.shape))
-#         return X_train, X_test
-#     else :
-#         X_train, X_test = X[:(len(X)-test_size)], X[(len(X)-test_size):]
-#         y_train, y_test = Y[:(len(Y)-test_size)], Y[(len(Y)-test_size):]
-#         print("X_train shape : {}, y_train shape : {}\nX_test shape : {}, y_test shape : {}".format(X_train.shape, y_train.shape, X_test.shape, y_test.shape))
-#         # train = np.array(np.split(train, len(train)/7))
-#         # test = np.array(np.split(test, len(test)/7))
-#         return X_train, y_train, X_test, y_test
-
-
-# %%
